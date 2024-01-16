@@ -1,7 +1,6 @@
 package com.ricardo.desafioanotaai.controllers;
 
 
-
 import com.ricardo.desafioanotaai.domain.product.Product;
 import com.ricardo.desafioanotaai.domain.product.ProductDTO;
 import com.ricardo.desafioanotaai.service.ProductService;
@@ -35,13 +34,13 @@ public class ProductController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Product> update(@PathParam("id") String id, @RequestBody ProductDTO ProductDTO) {
+    public ResponseEntity<Product> update(@PathVariable("id") String id, @RequestBody ProductDTO ProductDTO) {
         Product updateProduct = this.ProductService.update(id, ProductDTO);
         return ResponseEntity.ok().body(updateProduct);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Product> delete(@PathParam("id") String id) {
+    public ResponseEntity<Product> delete(@PathVariable("id") String id) {
         this.ProductService.delete(id);
         return ResponseEntity.noContent().build();
     }

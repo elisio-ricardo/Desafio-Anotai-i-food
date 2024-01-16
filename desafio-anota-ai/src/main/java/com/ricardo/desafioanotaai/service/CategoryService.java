@@ -5,6 +5,8 @@ import com.ricardo.desafioanotaai.domain.category.Category;
 import com.ricardo.desafioanotaai.domain.category.CategoryDTO;
 import com.ricardo.desafioanotaai.domain.category.Exception.CategoryNotFoundException;
 import com.ricardo.desafioanotaai.repository.CategoryRepository;
+import com.ricardo.desafioanotaai.service.aws.AwsSnsService;
+import com.ricardo.desafioanotaai.service.aws.MessageDTO;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,15 +15,19 @@ import java.util.Optional;
 @Service
 public class CategoryService {
 
-    private CategoryRepository categoryRepository;
+    private final CategoryRepository categoryRepository;
 
-    public CategoryService(CategoryRepository categoryRepository) {
+    private final AwsSnsService awsSnsService;
+
+    public CategoryService(CategoryRepository categoryRepository, AwsSnsService awsSnsService) {
         this.categoryRepository = categoryRepository;
+        this.awsSnsService = awsSnsService;
     }
 
     public Category insert(CategoryDTO categoryDTO) {
         Category newCategory = new Category(categoryDTO);
         this.categoryRepository.save(newCategory);
+
         return newCategory;
     }
 

@@ -7,6 +7,8 @@ import com.ricardo.desafioanotaai.domain.product.Exception.ProductNotFoundExcept
 import com.ricardo.desafioanotaai.domain.product.Product;
 import com.ricardo.desafioanotaai.domain.product.ProductDTO;
 import com.ricardo.desafioanotaai.repository.ProductRepository;
+import com.ricardo.desafioanotaai.service.aws.AwsSnsService;
+import com.ricardo.desafioanotaai.service.aws.MessageDTO;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,13 +16,17 @@ import java.util.List;
 @Service
 public class ProductService {
 
-    private CategoryService categoryService;
-    private ProductRepository productRepository;
+    private final CategoryService categoryService;
+    private final ProductRepository productRepository;
 
-    public ProductService(ProductRepository productRepository, CategoryService categoryService) {
-        this.productRepository = productRepository;
+    private final AwsSnsService awsSnsService;
+
+    public ProductService(CategoryService categoryService, ProductRepository productRepository, AwsSnsService awsSnsService) {
         this.categoryService = categoryService;
+        this.productRepository = productRepository;
+        this.awsSnsService = awsSnsService;
     }
+
 
     public Product insert(ProductDTO productDTO) {
         Category category = categoryService.getById(productDTO
@@ -30,6 +36,9 @@ public class ProductService {
         newProduct.setCategory(category);
 
         this.productRepository.save(newProduct);
+
+        this.awsSnsService.publish(new MessageDTO(newProduct.getOwnerId()));
+
         return newProduct;
     }
 
@@ -42,14 +51,18 @@ public class ProductService {
         Product updateProduct = this.productRepository.findById(id)
                 .orElseThrow(ProductNotFoundException::new);
 
+        if (productDTO.categoryId() != null) {
+            categoryService.getById(productDTO.categoryId())
+                    .ifPresent(updateProduct::setCategory);
+        }
+
         if (!productDTO.title().isEmpty()) updateProduct.setTitle(productDTO.title());
         if (!productDTO.description().isEmpty()) updateProduct.setDescription(productDTO.description());
         if (!(productDTO.price() == null)) updateProduct.setPrice(productDTO.price());
 
-        categoryService.getById(productDTO.categoryId())
-                .ifPresent(updateProduct::setCategory);
-
         this.productRepository.save(updateProduct);
+
+        this.awsSnsService.publish(new MessageDTO(updateProduct.getOwnerId()));
 
         return updateProduct;
 
