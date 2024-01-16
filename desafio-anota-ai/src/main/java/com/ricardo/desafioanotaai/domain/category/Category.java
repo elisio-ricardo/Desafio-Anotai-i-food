@@ -1,6 +1,5 @@
 package com.ricardo.desafioanotaai.domain.category;
 
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -18,4 +17,10 @@ public class Category {
     private String title;
     private String descriptions;
     private String ownerId;
+
+    public Category(CategoryDTO categoryDTO) {
+        this.title = categoryDTO.title();
+        this.descriptions = categoryDTO.description();
+        this.ownerId = categoryDTO.ownerId();
+    }
 }
