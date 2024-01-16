@@ -1,6 +1,7 @@
-package com.ricardo.desafioanotaai.domain.category;
+package com.ricardo.desafioanotaai.domain.product;
 
 
+import com.ricardo.desafioanotaai.domain.category.Category;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

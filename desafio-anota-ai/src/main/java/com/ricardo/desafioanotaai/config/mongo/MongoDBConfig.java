@@ -1,4 +1,4 @@
-package config.mongo;
+package com.ricardo.desafioanotaai.config.mongo;
 
 
 import org.springframework.context.annotation.Bean;
@@ -16,7 +16,7 @@ public class MongoDBConfig {
     }
 
     @Bean
-    private MongoDatabaseFactory mongoConfigure() {
+    public MongoDatabaseFactory mongoConfigure() {
         return new SimpleMongoClientDatabaseFactory("mongodb://localhost:27017/product-catalog");
     }
 }
