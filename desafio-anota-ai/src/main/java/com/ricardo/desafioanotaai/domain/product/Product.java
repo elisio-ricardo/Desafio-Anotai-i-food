@@ -12,7 +12,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Products {
+public class Product {
 
     @Id
     private String id;
@@ -21,4 +21,11 @@ public class Products {
     private String ownerId;
     private Integer price;
     private Category category;
+
+    public Product(ProductDTO productDTO) {
+        this.title = productDTO.title();
+        this.description = productDTO.description();
+        this.ownerId = productDTO.ownerId();
+        this.price = productDTO.price();
+    }
 }
