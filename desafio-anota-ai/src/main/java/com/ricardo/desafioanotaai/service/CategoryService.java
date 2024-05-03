@@ -28,6 +28,8 @@ public class CategoryService {
         Category newCategory = new Category(categoryDTO);
         this.categoryRepository.save(newCategory);
 
+        this.awsSnsService.publish(new MessageDTO(newCategory.toString()));
+
         return newCategory;
     }
 
@@ -48,6 +50,8 @@ public class CategoryService {
         if (!categoryDTO.description().isEmpty()) updateCategory.setDescriptions(categoryDTO.description());
 
         this.categoryRepository.save(updateCategory);
+
+        this.awsSnsService.publish(new MessageDTO(updateCategory.toString()));
 
         return updateCategory;
 
